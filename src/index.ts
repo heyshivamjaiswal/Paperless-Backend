@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import { dbConnect } from './db/db';
 import authRoute from './routes/userRoute';
 import docsRoute from './routes/docsRoute';
+import taskRoute from './routes/taskRoute';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoute);
 app.use('/api/docs', docsRoute);
+app.use('/api/task', taskRoute);
 // Server
 const PORT = process.env.PORT || 3000;
 
