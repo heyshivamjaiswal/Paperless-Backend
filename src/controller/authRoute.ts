@@ -1,7 +1,7 @@
-import express, { Router, type Request, type Response } from 'express';
-import User from '../models/userModel.js';
+import express, { type Request, type Response } from 'express';
+import User from '../models/userModel';
 import { compare, hash } from 'bcrypt-ts';
-import { generatedToken } from '../utils/generateToken.js';
+import { generatedToken } from '../utils/generateToken';
 
 const router = express.Router();
 

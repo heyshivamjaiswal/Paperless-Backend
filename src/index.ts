@@ -6,6 +6,7 @@ import { dbConnect } from './db/db';
 import authRoute from './routes/userRoute';
 import docsRoute from './routes/docsRoute';
 import taskRoute from './routes/taskRoute';
+import aiApiKeyRoute from './routes/aiKeyRoute';
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: true,
     credentials: true,
   })
 );
@@ -25,11 +26,17 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoute);
 app.use('/api/docs', docsRoute);
-app.use('/api/task', taskRoute);
+app.use('/api/tasks', taskRoute);
+app.use('/api/ai/key', aiApiKeyRoute);
+app.get('/health', (_, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Server
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT ${PORT}`);
-  dbConnect();
+dbConnect().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
+  });
 });
