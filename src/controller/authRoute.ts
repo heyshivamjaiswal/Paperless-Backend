@@ -74,7 +74,7 @@ export const signin = async (req: Request, res: Response) => {
 
     res.cookie('accessToken', token, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       secure: process.env.NODE_ENV === 'production',
     });
     res.json({ message: 'user logged in' });
