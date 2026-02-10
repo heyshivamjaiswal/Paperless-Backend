@@ -87,13 +87,21 @@ export const signin = async (req: Request, res: Response) => {
 //Logout Route
 
 export const logout = async (req: Request, res: Response) => {
-  res.clearCookie('accessToken', {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-  });
+  try {
+    // Clear the cookie with ALL the right options
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // true in production
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+    });
 
-  res.json({ message: 'Logged out successfully' });
+    // Return success
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: 'Logout failed' });
+  }
 };
 
 export default router;
