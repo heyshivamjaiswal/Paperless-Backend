@@ -72,10 +72,13 @@ export const signin = async (req: Request, res: Response) => {
 
     const token = generatedToken(user.id);
 
+    const isProd = process.env.NODE_ENV === 'production';
+
     res.cookie('accessToken', token, {
       httpOnly: true,
-      sameSite: 'none',
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProd, // true only in prod
+      sameSite: isProd ? 'none' : 'lax',
+      path: '/',
     });
     res.json({ message: 'user logged in' });
   } catch (err) {
