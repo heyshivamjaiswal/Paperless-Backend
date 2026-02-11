@@ -12,10 +12,20 @@ dotenv.config();
 
 const app = express();
 
-// Middlewares
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://paperless-alpha.vercel.app',
+];
+
 app.use(
   cors({
-    origin: 'https://paperless-backend-49p8.onrender.com',
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
