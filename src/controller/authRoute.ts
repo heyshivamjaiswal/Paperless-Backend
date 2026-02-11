@@ -76,10 +76,10 @@ export const signin = async (req: Request, res: Response) => {
 
     res.cookie('accessToken', token, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
-      path: '/', // ✅ ADDED: Must match logout
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
     res.json({ message: 'user logged in' });
@@ -92,13 +92,10 @@ export const signin = async (req: Request, res: Response) => {
 //Logout Route
 export const logout = async (req: Request, res: Response) => {
   try {
-    // ✅ FIXED: Now matches login exactly
-    const isProduction = process.env.NODE_ENV === 'production';
-
     res.clearCookie('accessToken', {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      secure: true,
+      sameSite: 'none',
       path: '/',
     });
 

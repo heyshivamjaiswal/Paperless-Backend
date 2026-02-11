@@ -15,7 +15,7 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: true,
+    origin: 'https://paperless-backend-49p8.onrender.com',
     credentials: true,
   })
 );
