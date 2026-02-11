@@ -1,7 +1,7 @@
 import express from 'express';
-import { logout, signin, signup } from '../controller/authRoute.js';
-import { authCookie } from '../middleware/protectedRoute.js';
-import User from '../models/userModel.js';
+import { logout, signin, signup } from '../controller/authRoute';
+import { authCookie } from '../middleware/protectedRoute';
+import User from '../models/userModel';
 
 const router = express.Router();
 

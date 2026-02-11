@@ -55,7 +55,6 @@ export const signup = async (req: Request, res: Response) => {
 };
 
 //SIGNIN ROUTE
-
 export const signin = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
@@ -67,19 +66,22 @@ export const signin = async (req: Request, res: Response) => {
     const isPasswordCorrect = await compare(password, user.password);
 
     if (!isPasswordCorrect) {
-      return res.status(400).json({ message: 'Invalid username or passowrd' });
+      return res.status(400).json({ message: 'Invalid username or password' });
     }
 
     const token = generatedToken(user.id);
 
-    const isProd = process.env.NODE_ENV === 'production';
+    // ✅ FIXED: Cookie settings must match logout exactly
+    const isProduction = process.env.NODE_ENV === 'production';
 
     res.cookie('accessToken', token, {
       httpOnly: true,
-      secure: isProd, // true only in prod
-      sameSite: isProd ? 'none' : 'lax',
-      path: '/',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      path: '/', // ✅ ADDED: Must match logout
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
+
     res.json({ message: 'user logged in' });
   } catch (err) {
     console.error(err, 'Signin Error');
@@ -88,18 +90,18 @@ export const signin = async (req: Request, res: Response) => {
 };
 
 //Logout Route
-
 export const logout = async (req: Request, res: Response) => {
   try {
-    // Clear the cookie with ALL the right options
+    // ✅ FIXED: Now matches login exactly
+    const isProduction = process.env.NODE_ENV === 'production';
+
     res.clearCookie('accessToken', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // true in production
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
     });
 
-    // Return success
     res.status(200).json({ message: 'Logged out successfully' });
   } catch (error) {
     console.error('Logout error:', error);
